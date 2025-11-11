@@ -8,7 +8,8 @@
 SensorManager sensors;
 DisplayManager display;
 
-void setup() {
+void setup()
+{
     pinMode(LED_PIN, OUTPUT);
     pinMode(BUZZER_PIN, OUTPUT);
     digitalWrite(LED_PIN, LOW);
@@ -16,15 +17,18 @@ void setup() {
 
     Serial.begin(9600);
 
-    if (!sensors.begin()) {
+    if (!sensors.begin())
+    {
         Serial.println("BME280 init failed!");
-        while (true);
+        while (true)
+            ;
     }
 
     display.begin();
 }
 
-void loop() {
+void loop()
+{
     WeatherData data = sensors.readData();
 
     bool stormDetected = (data.pressure < 1000 && data.humidity > 80);

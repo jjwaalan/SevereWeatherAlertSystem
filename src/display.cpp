@@ -1,12 +1,14 @@
 #include "display.h"
 
-void DisplayManager::begin() {
+void DisplayManager::begin()
+{
     lcd.init();
     lcd.backlight();
     lcd.clear();
 }
 
-void DisplayManager::showReadings(const WeatherData& data) {
+void DisplayManager::showReadings(const WeatherData &data)
+{
     lcd.setCursor(0, 0);
     lcd.print("T:");
     lcd.print(data.temperature, 1);
@@ -20,7 +22,8 @@ void DisplayManager::showReadings(const WeatherData& data) {
     lcd.print("hPa   ");
 }
 
-void DisplayManager::showAlert(bool stormDetected) {
+void DisplayManager::showAlert(bool stormDetected)
+{
     lcd.setCursor(0, 1);
     if (stormDetected)
         lcd.print("Storm Alert!   ");

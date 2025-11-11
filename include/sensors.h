@@ -3,13 +3,15 @@
 
 #include <Adafruit_BME280.h>
 
-struct WeatherData {
+struct WeatherData
+{
     float temperature;
     float humidity;
     float pressure;
 };
 
-class SensorManager {
+class SensorManager
+{
 public:
     bool begin();
     WeatherData readData();
