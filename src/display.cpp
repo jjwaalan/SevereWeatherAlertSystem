@@ -10,17 +10,18 @@ void DisplayManager::begin()
 void DisplayManager::showReadings(const WeatherData &data)
 {
     lcd.setCursor(0, 0);
-    lcd.print("T:");
+    lcd.print("Temperature:");
     lcd.print(data.temperature, 1);
+    lcd.print("C");
     lcd.setCursor(0, 2);
-    lcd.print("C H:");
+    lcd.print("Humidity:");
     lcd.print(data.humidity, 0);
-    lcd.print("%  ");
+    lcd.print("%");
 
     lcd.setCursor(0, 3);
     lcd.print("Pressure:");
     lcd.print(data.pressure, 1);
-    lcd.print("hPa   ");
+    lcd.print("hPa");
 }
 
 void DisplayManager::showAlert(bool stormDetected)

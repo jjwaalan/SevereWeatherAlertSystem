@@ -11,8 +11,37 @@ SensorManager sensors;
 DisplayManager display;
 StormDetector stormDetector;
 
+int pressCount = 0;
+unsigned long lastPressTime = 0;
+
+void checkButtonPress()
+{
+    if (digitalRead(BUTTON_PIN) == HIGH)
+    {
+        unsigned long now = millis();
+        if (now - lastPressTime < 700)
+        { // double/triple press window
+            pressCount++;
+        }
+        else
+        {
+            pressCount = 1; // reset if too slow
+        }
+        lastPressTime = now;
+
+        if (pressCount == 3)
+        {
+            sensors.enableSimulation(!sensors.isSimulating());
+            pressCount = 0;
+            Serial.println("simulation mode toggled");
+        }
+        delay(200); // debounce
+    }
+}
+
 void setup()
 {
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
     pinMode(LED_PIN, OUTPUT);
     pinMode(BUZZER_PIN, OUTPUT);
     digitalWrite(LED_PIN, LOW);
@@ -23,8 +52,8 @@ void setup()
     if (!sensors.begin())
     {
         Serial.println("BME280 init failed!");
-        while (true)
-            ;
+        Serial.println("Continuing in simulation mode");
+        sensors.enableSimulation(true);
     }
 
     display.begin();
@@ -32,8 +61,9 @@ void setup()
 
 void loop()
 {
-    WeatherData data = sensors.readData();
+    checkButtonPress();
 
+    WeatherData data = sensors.readData();
     bool stormDetected = stormDetector.update(data);
 
     digitalWrite(LED_PIN, stormDetected);
@@ -42,5 +72,5 @@ void loop()
     display.showReadings(data);
     display.showAlert(stormDetected);
 
-    delay(1000); // 1 Hz sampling
+    delay(1000);
 }
