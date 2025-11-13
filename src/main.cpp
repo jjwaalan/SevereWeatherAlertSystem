@@ -1,12 +1,15 @@
 #include <Arduino.h>
 #include "sensors.h"
 #include "display.h"
+#include "detectStorm.h"
 
+#define BUTTON_PIN 7
 #define LED_PIN 8
 #define BUZZER_PIN 9
 
 SensorManager sensors;
 DisplayManager display;
+StormDetector stormDetector;
 
 void setup()
 {
@@ -31,7 +34,7 @@ void loop()
 {
     WeatherData data = sensors.readData();
 
-    bool stormDetected = (data.pressure < 1000 && data.humidity > 80);
+    bool stormDetected = stormDetector.update(data);
 
     digitalWrite(LED_PIN, stormDetected);
     digitalWrite(BUZZER_PIN, stormDetected);
@@ -39,5 +42,5 @@ void loop()
     display.showReadings(data);
     display.showAlert(stormDetected);
 
-    delay(1000);
+    delay(1000); // 1 Hz sampling
 }

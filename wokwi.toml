@@ -1,4 +1,4 @@
 [wokwi]
 version = 1
 firmware = '.pio/build/uno/firmware.hex' # Path to the compiled .hex file
-elf = '.pio/build/uno/firmware.elf'
+elf = '../.pio/build/uno/firmware.elf'
