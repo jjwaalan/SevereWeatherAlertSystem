@@ -6,13 +6,6 @@
     { "type": "wokwi-arduino-uno", "id": "uno", "top": -9, "left": -19.8, "attrs": {} },
     { "type": "wokwi-led", "id": "led1", "top": -128.4, "left": 119, "attrs": { "color": "red" } },
     {
-      "type": "wokwi-buzzer",
-      "id": "bz1",
-      "top": -160.8,
-      "left": 193.8,
-      "attrs": { "volume": "0.1" }
-    },
-    {
       "type": "wokwi-lcd2004",
       "id": "lcd1",
       "top": -281.6,
@@ -23,8 +16,6 @@
   "connections": [
     [ "uno:GND.1", "led1:C", "black", [ "v-19.2", "h38.7" ] ],
     [ "uno:8", "led1:A", "green", [ "v0" ] ],
-    [ "uno:9", "bz1:2", "green", [ "v-28.8", "h87.2" ] ],
-    [ "uno:GND.1", "bz1:1", "black", [ "v-19.2", "h125.1" ] ],
     [ "uno:GND.1", "lcd1:GND", "black", [ "v-19.2", "h182.7", "v-230.4" ] ],
     [ "uno:A5", "lcd1:SCL", "green", [ "v19.1", "h61.9", "v-422.4" ] ],
     [ "uno:A4", "lcd1:SDA", "green", [ "v28.7", "h61.8", "v-441.6" ] ],

@@ -1,4 +1,5 @@
 #include "display.h"
+#include "detectStorm.h"
 
 void DisplayManager::begin()
 {
@@ -13,22 +14,24 @@ void DisplayManager::showReadings(const WeatherData &data)
     lcd.print("Temperature:");
     lcd.print(data.temperature, 1);
     lcd.print("C");
-    lcd.setCursor(0, 2);
+    lcd.setCursor(0, 1);
     lcd.print("Humidity:");
     lcd.print(data.humidity, 0);
     lcd.print("%");
 
-    lcd.setCursor(0, 3);
+    lcd.setCursor(0, 2);
     lcd.print("Pressure:");
     lcd.print(data.pressure, 1);
     lcd.print("hPa");
 }
 
-void DisplayManager::showAlert(bool stormDetected)
+void DisplayManager::showAlert(StormStatus status)
 {
-    lcd.setCursor(0, 4);
-    if (stormDetected)
+    lcd.setCursor(0, 3);
+    if (status == STORM_DETECTED)
         lcd.print("Storm Alert!   ");
+    else if (status == POSSIBLE_STORM)
+        lcd.print("Possible Storm ");
     else
         lcd.print("Stable Weather ");
 }

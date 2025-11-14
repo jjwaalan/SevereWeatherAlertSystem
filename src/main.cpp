@@ -3,9 +3,9 @@
 #include "display.h"
 #include "detectStorm.h"
 
-#define BUTTON_PIN 7
+#define BUTTON_PIN 0
 #define LED_PIN 8
-#define BUZZER_PIN 9
+
 
 SensorManager sensors;
 DisplayManager display;
@@ -16,8 +16,9 @@ unsigned long lastPressTime = 0;
 
 void checkButtonPress()
 {
-    if (digitalRead(BUTTON_PIN) == HIGH)
+    if (digitalRead(BUTTON_PIN) == LOW)
     {
+        Serial.println("Button pressed");
         unsigned long now = millis();
         if (now - lastPressTime < 700)
         { // double/triple press window
@@ -43,19 +44,16 @@ void setup()
 {
     pinMode(BUTTON_PIN, INPUT_PULLUP);
     pinMode(LED_PIN, OUTPUT);
-    pinMode(BUZZER_PIN, OUTPUT);
-    digitalWrite(LED_PIN, LOW);
-    digitalWrite(BUZZER_PIN, LOW);
+    digitalWrite(LED_PIN, HIGH);
 
     Serial.begin(9600);
-
+    Serial.println("Weather Station Starting...");
     if (!sensors.begin())
     {
         Serial.println("BME280 init failed!");
         Serial.println("Continuing in simulation mode");
         sensors.enableSimulation(true);
     }
-
     display.begin();
 }
 
@@ -64,13 +62,12 @@ void loop()
     checkButtonPress();
 
     WeatherData data = sensors.readData();
-    bool stormDetected = stormDetector.update(data);
+    StormStatus status = stormDetector.update(data);
 
-    digitalWrite(LED_PIN, stormDetected);
-    digitalWrite(BUZZER_PIN, stormDetected);
+    digitalWrite(LED_PIN, status == STORM_DETECTED ? LOW : HIGH);
 
     display.showReadings(data);
-    display.showAlert(stormDetected);
+    display.showAlert(status);
 
     delay(1000);
 }
