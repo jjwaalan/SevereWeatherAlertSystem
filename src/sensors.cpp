@@ -24,12 +24,12 @@ WeatherData SensorManager::readData()
     static float baseHum = 70.0;
     static float basePres = 1013.0;
 
-    // Simulate storm formation over ~5 minutes (300 steps)
-    if (simStep < 300)
+    // Simulate storm formation over ~2 minutes (100 steps)
+    if (simStep < 100)
     {
-        data.temperature = baseTemp - 0.02 * simStep; // slow cooling
-        data.humidity = baseHum + 0.05 * simStep;     // rising humidity
-        data.pressure = basePres - 0.04 * simStep;    // dropping pressure
+        data.temperature = baseTemp - 0.05 * simStep; // slow cooling
+        data.humidity = baseHum + 0.25 * simStep;     // rising humidity
+        data.pressure = basePres - 0.18 * simStep;    // dropping pressure
     }
     else
     {

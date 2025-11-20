@@ -15,8 +15,9 @@ class SensorManager
 public:
     bool begin();
     WeatherData readData();
-
+    
     void enableSimulation(bool enable) { simulate = enable; }
+    void disableSimulation() { simulate = false; }
     bool isSimulating() const { return simulate; }
 
 private:

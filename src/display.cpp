@@ -23,6 +23,7 @@ void DisplayManager::showReadings(const WeatherData &data)
     lcd.print("Pressure:");
     lcd.print(data.pressure, 1);
     lcd.print("hPa");
+    lcd.print(" ");
 }
 
 void DisplayManager::showAlert(StormStatus status)

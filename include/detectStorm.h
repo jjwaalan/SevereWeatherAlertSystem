@@ -36,6 +36,31 @@ class StormDetector
 {
 public:
     StormDetector() {}
+    
+    void clearHistory() {
+        for (int i = 0; i < 60; i++)
+            raw60[i] = {0, 0, 0};
+
+        for (int i = 0; i < 15; i++)
+            avg15[i] = {0, 0, 0};
+
+        rawIndex = 0;
+        avgIndex = 0;
+        minutesCollected = 0;
+    }
+
+    void fillHistory(const WeatherData &data)
+    {
+        for (int i = 0; i < 60; i++)
+            raw60[i] = data;
+
+        for (int i = 0; i < 15; i++)
+            avg15[i] = data;
+
+        rawIndex = 0;
+        avgIndex = 0;
+        minutesCollected = 15;  // fully primed
+    }
 
     StormStatus update(const WeatherData &data)
     {
