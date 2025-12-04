@@ -10,7 +10,11 @@ struct TrendData
     float pressureDrop5min = 0;
     float pressureDrop15min = 0;
     float tempDrop15min = 0;
+    float tempDrop5min = 0;
+    float tempDrop1min = 0;
     float humidityRise15min = 0;
+    float humidityRise5min = 0;
+    float humidityRise1min = 0;
 };
 enum StormStatus
 {
@@ -85,9 +89,9 @@ public:
         float dewDiff = data.temperature - dewPoint;
 
         bool stormDetected =
-            trend.pressureDrop15min >= 3.0 &&
-            trend.tempDrop15min >= 1.0 &&
-            trend.humidityRise15min >= 5.0 &&
+            (trend.pressureDrop15min >= 3.0 || trend.pressureDrop5min >= 3.0 || trend.pressureDrop1min >= 3.0 )&&
+            (trend.tempDrop15min  >= 1.0 || trend.tempDrop5min  >= 1.0 || trend.tempDrop1min  >= 1.0) &&
+            (trend.humidityRise15min  >= 5.0 || trend.humidityRise5min  >= 5.0 || trend.humidityRise1min >= 5.0) &&
             dewDiff <= 2.0;
 
         bool possibleStorm =
@@ -161,7 +165,12 @@ private:
         t.pressureDrop15min = d15.pressure - current.pressure;
 
         t.tempDrop15min = d15.temperature - current.temperature;
+        t.tempDrop5min = d5.temperature - current.temperature;
+        t.tempDrop1min = d1.temperature - current.temperature;
+
         t.humidityRise15min = current.humidity - d15.humidity;
+        t.humidityRise5min = current.humidity - d5.humidity;
+        t.humidityRise1min = current.humidity - d1.humidity; 
 
         return t;
     }
