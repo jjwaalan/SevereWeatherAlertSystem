@@ -6,4 +6,4 @@ SETUP:
 2. plug arduino into power source
 3. to engage simulation mode, press button 3 times
 4. sensor readings and storm status should appear on lcd display
-
+5. if the display says storm detected, and the led is lit, theres a storm!
