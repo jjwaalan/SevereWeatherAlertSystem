@@ -31,11 +31,30 @@ WeatherData SensorManager::readData()
         data.humidity = baseHum + 0.25 * simStep;     // rising humidity
         data.pressure = basePres - 0.18 * simStep;    // dropping pressure
     }
-    else
+    // Peak storm conditions at step 100
+    else if (simStep == 100)
     {
         data.temperature = 20.0;
         data.humidity = 95.0;
         data.pressure = 995.0;
+    }
+    // Recovery phase: return to normal conditions (~100 steps)
+    // Humidity decreases, pressure increases back to baseline
+    else if (simStep < 200)
+    {
+        int recoveryStep = simStep - 100;
+        data.humidity = 95.0 - 0.25 * recoveryStep;
+        data.pressure = 995.0 + 0.18 * recoveryStep;
+        data.temperature = 20.0 + 0.05 * recoveryStep;
+    }
+
+    else
+    {
+        data.temperature = 25.0;
+        data.humidity = 70.0;
+        data.pressure = 1013.0;
+        if (simStep >= 250)
+            simStep = 0;
     }
 
     return data;

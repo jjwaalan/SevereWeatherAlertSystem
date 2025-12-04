@@ -4,6 +4,7 @@
 #include "detectStorm.h"
 
 #define BUTTON_PIN 0
+#define SPEAKER_PIN 7
 #define LED_PIN 8
 
 SensorManager sensors;

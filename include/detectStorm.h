@@ -4,9 +4,6 @@
 #include <Arduino.h>
 #include "sensors.h"
 
-//------------------------
-// Trend Data Structure
-//------------------------
 struct TrendData
 {
     float pressureDrop1min = 0;
@@ -22,9 +19,7 @@ enum StormStatus
     STORM_DETECTED
 };
 
-//------------------------
-// Dew Point Function
-//------------------------
+
 inline float computeDewPoint(float t, float h)
 {
     float a = 17.27, b = 237.7;
@@ -97,26 +92,43 @@ public:
 
         bool possibleStorm =
             (trend.pressureDrop5min >= 1.5 && data.humidity > 85.0);
+        if (!stormActive){
+            if (stormDetected) {
+                stormActive = true;
+                stormPeakHumidity = data.humidity;
+                stormPeakPressure = data.pressure;
+                return STORM_DETECTED;
+            }
+            else if (possibleStorm)
+                return POSSIBLE_STORM;
+            return NO_STORM;
+        }
 
-        if (stormDetected)
-            return STORM_DETECTED;
-        else if (possibleStorm)
-            return POSSIBLE_STORM;
+        if (data.humidity > stormPeakHumidity)
+            stormPeakHumidity = data.humidity;
+        if (data.pressure < stormPeakPressure)
+            stormPeakPressure = data.pressure;
+    
+        float humidityDrop = (stormPeakHumidity - data.humidity) / stormPeakHumidity;
+        bool humidityRecovered = (humidityDrop >= humidityRecoveryMin);
+        bool pressureRecovered = (data.pressure - stormPeakPressure) >= pressureRecoveryMin;
 
-        return NO_STORM;
+        if (humidityRecovered && pressureRecovered) {
+            stormActive = false;
+            return NO_STORM;
+        }
+        return STORM_DETECTED;
+
     }
 
 private:
-    // RAM-optimized structure
     WeatherData raw60[60];   // 60 seconds of raw data
     WeatherData avg15[15];   // 15 × 1-minute averages
     int rawIndex = 0;
     int avgIndex = 0;
     int minutesCollected = 0;
 
-    //-----------------------------------
-    // Compute 1-minute average
-    //-----------------------------------
+
     WeatherData compute1MinAverage()
     {
         WeatherData out = {0, 0, 0};
@@ -132,9 +144,6 @@ private:
         return out;
     }
 
-    //-----------------------------------
-    // Compute trends from averages only
-    //-----------------------------------
     TrendData computeTrends(const WeatherData &current)
     {
         TrendData t;
@@ -156,6 +165,13 @@ private:
 
         return t;
     }
+
+    bool stormActive = false;
+    float stormPeakHumidity = 0.0;
+    float stormPeakPressure = 0.0;
+
+    const float humidityRecoveryMin = 0.10; // 10% drop
+    const float pressureRecoveryMin = 2.0;  // 2 hPa
 };
 
 #endif
